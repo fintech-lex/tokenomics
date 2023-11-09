@@ -8,7 +8,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5
 // Have the KaseiCoinCrowdsale contract inherit the following OpenZeppelin:
 // * Crowdsale
 // * MintedCrowdsale
-contract KaseiCoinCrowdsale { // UPDATE THE CONTRACT SIGNATURE TO ADD INHERITANCE
+contract KaseiCoinCrowdsale is Crowdsale, MintedCrowdsale { // UPDATE THE CONTRACT SIGNATURE TO ADD INHERITANCE
     
     // Provide parameters for all of the features of your crowdsale, such as the `rate`, `wallet` for fundraising, and `token`.
     constructor(
@@ -36,19 +36,19 @@ contract KaseiCoinCrowdsaleDeployer {
 
     ) public {
         // Create a new instance of the KaseiCoin contract.
-        KaseiToken token = new KaseiToken(name, symbol, 0);
+        KaseiCoin token = new KaseiCoin(name, symbol, 0);
         
         // Assign the token contract’s address to the `kasei_token_address` variable.
         kasei_token_address = address(token);
 
         // Create a new instance of the `KaseiCoinCrowdsale` contract
-        KaseiCoinCrowdsale crowdsale = new KaseiCoinCrowdsale();
+        KaseiCoinCrowdsale crowdsale = new KaseiCoinCrowdsale(1, wallet, token);
             
         // Aassign the `KaseiCoinCrowdsale` contract’s address to the `kasei_crowdsale_address` variable.
-        kasei_crowdsale_address =  address(KaseiCoinCrowdsale);
+        kasei_crowdsale_address =  address(crowdsale);
 
         // Set the `KaseiCoinCrowdsale` contract as a minter
-        token.addMinter(KaseiCoinCrowdsale);
+        token.addMinter(kasei_crowdsale_address);
         
         // Have the `KaseiCoinCrowdsaleDeployer` renounce its minter role.
         token.renounceMinter();
