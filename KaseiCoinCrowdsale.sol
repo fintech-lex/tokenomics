@@ -54,3 +54,6 @@ contract KaseiCoinCrowdsaleDeployer {
         token.renounceMinter();
     }
 }
+
+
+
